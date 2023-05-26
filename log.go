@@ -1,6 +1,9 @@
 package log
 
 import (
+	"fmt"
+	"strings"
+
 	"go.uber.org/zap"
 )
 
@@ -23,33 +26,64 @@ func NewLogger() *Logger {
 	return config.Build()
 }
 
-func (l *Logger) Debug(msg string) {
-	l.log(DEBUG, msg)
+func (l *Logger) Debug(msg ...string) {
+	l.log(DEBUG, msg...)
 }
 
-func (l *Logger) Info(msg string) {
-	l.log(INFO, msg)
+func (l *Logger) Debugf(format string, args ...interface{}) {
+	l.logf(DEBUG, format, args...)
 }
 
-func (l *Logger) Warning(msg string) {
-	l.log(WARNING, msg)
+func (l *Logger) Info(msg ...string) {
+	l.log(INFO, msg...)
 }
 
-func (l *Logger) Error(msg string) {
-	l.log(ERROR, msg)
+func (l *Logger) Infof(format string, args ...interface{}) {
+	l.logf(INFO, format, args...)
 }
 
-func (l *Logger) log(level LogLevel, msg string) {
+func (l *Logger) Warning(msg ...string) {
+	l.log(WARNING, msg...)
+}
+
+func (l *Logger) Warningf(format string, args ...interface{}) {
+	l.logf(WARNING, format, args...)
+}
+
+func (l *Logger) Error(msg ...string) {
+	l.log(ERROR, msg...)
+}
+
+func (l *Logger) Errorf(format string, args ...interface{}) {
+	l.logf(ERROR, format, args...)
+}
+
+func (l *Logger) log(level LogLevel, msg ...string) {
 	if l.level <= level {
 		switch level {
 		case DEBUG:
-			l.logger.Debug(msg)
+			l.logger.Debug(strings.Join(msg, " "))
 		case INFO:
-			l.logger.Info(msg)
+			l.logger.Info(strings.Join(msg, " "))
 		case WARNING:
-			l.logger.Warn(msg)
+			l.logger.Warn(strings.Join(msg, " "))
 		case ERROR:
-			l.logger.Error(msg)
+			l.logger.Error(strings.Join(msg, " "))
+		}
+	}
+}
+
+func (l *Logger) logf(level LogLevel, format string, args ...interface{}) {
+	if l.level <= level {
+		switch level {
+		case DEBUG:
+			l.logger.Debug(fmt.Sprintf(format, args...))
+		case INFO:
+			l.logger.Info(fmt.Sprintf(format, args...))
+		case WARNING:
+			l.logger.Warn(fmt.Sprintf(format, args...))
+		case ERROR:
+			l.logger.Error(fmt.Sprintf(format, args...))
 		}
 	}
 }

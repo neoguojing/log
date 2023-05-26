@@ -87,7 +87,7 @@ func (l *LoggerConfig) Rotate(opts ...Option) *LoggerConfig {
 		opt(l)
 	}
 	
-	l.output = zapcore.NewMultiWriteSyncer(zapcore.AddSync(l.fileConfig), zapcore.Lock(os.Stdout))
+	l.output = zapcore.NewMultiWriteSyncer(zapcore.AddSync(l.fileConfig), zapcore.AddSync(os.Stdout))
 	l.core = zapcore.NewCore(l.encoder, l.output, l.coreLevel)
 	return l
 }

@@ -113,4 +113,3 @@ func (l *LoggerConfig) Build() *Logger {
 	return log
 
 }
-

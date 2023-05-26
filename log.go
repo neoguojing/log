@@ -1,4 +1,3 @@
-
 package log
 
 import (
@@ -20,7 +19,7 @@ type Logger struct {
 }
 
 func NewLogger() *Logger {
-	config := NewConfig()
+	config := NewConfig().Rotate()
 	return config.Build()
 }
 
@@ -54,5 +53,3 @@ func (l *Logger) log(level LogLevel, msg string) {
 		}
 	}
 }
-
-

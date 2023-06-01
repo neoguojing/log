@@ -2,6 +2,7 @@ package log
 
 import (
 	"os"
+	"path/filepath"
 
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
@@ -32,8 +33,10 @@ var (
 	encoderConsole = zapcore.NewConsoleEncoder(encoderConfig)
 	encoderJson    = zapcore.NewJSONEncoder(encoderConfig)
 
+	basePath             = os.Getenv("LOG_PATH")
+	logFileName          = os.Args[0]
 	DefaultLogFileConfig = &lumberjack.Logger{
-		Filename:   "./app.log",
+		Filename:   filepath.Join(basePath, logFileName),
 		MaxSize:    10, // megabytes
 		MaxBackups: 5,
 		MaxAge:     28, // days

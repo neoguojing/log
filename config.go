@@ -90,7 +90,7 @@ func (l *LoggerConfig) Rotate(opts ...Option) *LoggerConfig {
 		opt(l)
 	}
 
-	l.output = zapcore.AddSync(l.fileConfig)
+	l.output = zapcore.NewMultiWriteSyncer(zapcore.AddSync(l.fileConfig), zapcore.AddSync(os.Stdout))
 	l.core = zapcore.NewCore(l.encoder, l.output, l.coreLevel)
 	return l
 }
@@ -112,7 +112,7 @@ func (l *LoggerConfig) Format(format LogFormat) *LoggerConfig {
 
 func (l *LoggerConfig) Build() *Logger {
 	log := &Logger{level: l.level}
-	log.logger = zap.New(l.core, zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel))
+	log.logger = zap.New(l.core, zap.AddCaller(), zap.AddStacktrace(zap.FatalLevel))
 	return log
 
 }

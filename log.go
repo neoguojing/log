@@ -14,6 +14,7 @@ const (
 	INFO
 	WARNING
 	ERROR
+	FATAL
 )
 
 type Logger struct {
@@ -58,6 +59,17 @@ func (l *Logger) Errorf(format string, args ...interface{}) {
 	l.logf(ERROR, format, args...)
 }
 
+	
+func (l *Logger) Fatal(msg ...string) {
+	l.log(FATAL, msg...)
+}
+
+func (l *Logger) Fatalf(format string, args ...interface{}) {
+	l.logf(FATAL, format, args...)
+}
+
+
+
 func (l *Logger) log(level LogLevel, msg ...string) {
 	if l.level <= level {
 		switch level {
@@ -69,6 +81,8 @@ func (l *Logger) log(level LogLevel, msg ...string) {
 			l.logger.Warn(strings.Join(msg, " "))
 		case ERROR:
 			l.logger.Error(strings.Join(msg, " "))
+		case FATAL:
+			l.logger.Fatal(strings.Join(msg, " "))
 		}
 	}
 }
@@ -84,6 +98,10 @@ func (l *Logger) logf(level LogLevel, format string, args ...interface{}) {
 			l.logger.Warn(fmt.Sprintf(format, args...))
 		case ERROR:
 			l.logger.Error(fmt.Sprintf(format, args...))
+		case FATAL:
+			l.logger.Fatal(fmt.Sprintf(format, args...))
 		}
 	}
 }
+
+

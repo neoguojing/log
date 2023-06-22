@@ -111,9 +111,10 @@ func (l *LoggerConfig) Format(format LogFormat) *LoggerConfig {
 }
 
 func (l *LoggerConfig) Build() *Logger {
+
 	log := &Logger{level: l.level}
-	log.logger = zap.New(l.core, zap.AddCaller(), zap.AddStacktrace(zap.FatalLevel))
-	log.logger.WithOptions(zap.AddCallerSkip(2))
+	log.logger = zap.New(l.core, zap.AddCaller(), zap.AddStacktrace(zap.FatalLevel), zap.AddCallerSkip(2))
+
 	return log
 
 }

@@ -22,9 +22,20 @@ type Logger struct {
 	logger *zap.Logger
 }
 
-func NewLogger() *Logger {
+type LogOption func(*Logger)
+
+func WithCallerSkip(skips int) LogOption {
+	return func(l *Logger) {
+		l.logger = l.logger.WithOptions(zap.AddCallerSkip(skips))
+	}
+}
+func NewLogger(opts ...LogOption) *Logger {
 	config := NewConfig().Rotate()
-	return config.Build()
+	l := config.Build()
+	for _, opt := range opts {
+		opt(l)
+	}
+	return l
 }
 
 func (l *Logger) Debug(msg ...string) {
@@ -59,7 +70,6 @@ func (l *Logger) Errorf(format string, args ...interface{}) {
 	l.logf(ERROR, format, args...)
 }
 
-	
 func (l *Logger) Fatal(msg ...string) {
 	l.log(FATAL, msg...)
 }
@@ -67,8 +77,6 @@ func (l *Logger) Fatal(msg ...string) {
 func (l *Logger) Fatalf(format string, args ...interface{}) {
 	l.logf(FATAL, format, args...)
 }
-
-
 
 func (l *Logger) log(level LogLevel, msg ...string) {
 	if l.level <= level {
@@ -103,5 +111,3 @@ func (l *Logger) logf(level LogLevel, format string, args ...interface{}) {
 		}
 	}
 }
-
-

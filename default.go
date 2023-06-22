@@ -1,7 +1,7 @@
 package log
 
 var (
-	logger = NewLogger()
+	logger = NewLogger(WithCallerSkip(1))
 )
 
 func SetLogger(l *Logger) {
